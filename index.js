@@ -20,6 +20,17 @@ const io = new Server(server, {
 	},
 	path: `${URLpath}/socket.io`, //url
 });
+
+//first data
+let data = {
+	speed: 75,
+	text: [
+		"Paski informacyjne Szkolnego Studia Telewizyjnego w Zespole Szkół Elektronicznych",
+		"Paski informacyjne Szkolnego Studia Telewizyjnego w Zespole Szkół Elektronicznych",
+	],
+	isOpen: false,
+};
+
 console.log(
 	`Serwer Express działa na http://localhost:${servicePort}${URLpath}/manage i http://localhost:${servicePort}${URLpath}/display 
 natomiast socket.io na http://localhost:${servicePort}${URLpath}/socket.io`
@@ -32,6 +43,31 @@ async function main() {
 	io.on("connect", (socket) => {
 		console.log("\nNowy klient: ");
 		console.log(socket.id);
+		function updateClients() {
+			socket.emit("update-data", data.text, data.speed, data.isOpen);
+		}
+		socket.on("req-data", () => {
+			updateClients();
+		});
+		socket.on("send-speed", (speed) => {
+			data.speed = speed;
+			socket.emit("server-successfull-message", "Poprawnie zmieniono prędkość");
+		});
+		socket.on("send-text", (text) => {
+			data.text = text;
+			socket.emit("server-successfull-message", "Poprawnie zmieniono tekst");
+		});
+
+		socket.on("open", () => {
+			data.isOpen = true;
+			socket.emit("server-successfull-message", "Uruchomiono napisy");
+			updateClients();
+		});
+		socket.on("close", () => {
+			data.isOpen = false;
+			socket.emit("server-successfull-message", "Zamknięto napisy");
+			updateClients();
+		});
 	});
 }
 main();

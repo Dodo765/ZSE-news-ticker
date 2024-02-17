@@ -85,3 +85,64 @@ body {
 	width: 200px;
 	position: relative;
 }
+.container.closed .text-area {
+	animation: close 1s ease-in-out;
+	width: 0px;
+	opacity: 0;
+}
+.container:not(.closed) .text-area {
+	animation: open 1s ease-in-out;
+	width: 1600px;
+	opacity: 1;
+}
+.container.closed {
+	animation: panel-not-visible 1s linear;
+	scale: 0;
+}
+.container:not(.closed) {
+	animation: panel-visible 1s linear;
+	scale: 1;
+}
+@keyframes close {
+	0% {
+		width: 1600px;
+		opacity: 1;
+	}
+	100% {
+		width: 0px;
+		opacity: 0;
+	}
+}
+@keyframes open {
+	0% {
+		width: 0px;
+		opacity: 0;
+	}
+	55% {
+		width: 0px;
+		opacity: 0;
+	}
+	100% {
+		width: 1600px;
+		opacity: 1;
+	}
+}
+@keyframes panel-visible {
+	0% {
+		scale: 0;
+	}
+	100% {
+		scale: 1;
+	}
+}
+@keyframes panel-not-visible {
+	0% {
+		scale: 1;
+	}
+	65% {
+		scale: 1;
+	}
+	100% {
+		scale: 0;
+	}
+}
