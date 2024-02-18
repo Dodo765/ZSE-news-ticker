@@ -50,6 +50,9 @@ const app = Vue.createApp({
 				this.socket.emit("req-data");
 			}, 1000);
 		});
+		setTimeout(() => {
+			document.querySelector(".startup").classList.remove("startup");
+		}, 1000);
 	},
 	watch: {
 		isOpen(newVal) {
@@ -63,11 +66,13 @@ const app = Vue.createApp({
 	methods: {
 		close() {
 			const con = document.querySelector(".container");
+			if (con.classList.contains("open")) con.classList.remove("open");
 			if (!con.classList.contains("closed")) con.classList.add("closed");
 		},
 		open() {
 			const con = document.querySelector(".container");
 			if (con.classList.contains("closed")) con.classList.remove("closed");
+			if (!con.classList.contains("open")) con.classList.add("open");
 		},
 	},
 }).mount(".container");

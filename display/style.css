@@ -85,23 +85,30 @@ body {
 	width: 200px;
 	position: relative;
 }
+.container {
+	transform: scale(0);
+}
+.container .text-area {
+	width: 0px;
+	opacity: 0;
+}
 .container.closed .text-area {
 	animation: close 1s ease-in-out;
 	width: 0px;
 	opacity: 0;
 }
-.container:not(.closed) .text-area {
+.container.open .text-area {
 	animation: open 1s ease-in-out;
 	width: 1600px;
 	opacity: 1;
 }
 .container.closed {
 	animation: panel-not-visible 1s linear;
-	scale: 0;
+	transform: scale(0);
 }
-.container:not(.closed) {
+.container.open {
 	animation: panel-visible 1s linear;
-	scale: 1;
+	transform: scale(1);
 }
 @keyframes close {
 	0% {
@@ -129,20 +136,20 @@ body {
 }
 @keyframes panel-visible {
 	0% {
-		scale: 0;
+		transform: scale(0);
 	}
 	100% {
-		scale: 1;
+		transform: scale(1);
 	}
 }
 @keyframes panel-not-visible {
 	0% {
-		scale: 1;
+		transform: scale(1);
 	}
 	65% {
-		scale: 1;
+		transform: scale(1);
 	}
 	100% {
-		scale: 0;
+		transform: scale(0);
 	}
 }

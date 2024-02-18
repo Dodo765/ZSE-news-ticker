@@ -20,12 +20,22 @@
 				Generator Pasków Informacyjnych
 			</div>
 			<div class="bg play">
-				<button id="show" class="mini_button" @click="open()">
-					<img src="img/plus.png" alt="plus" />
+				<button
+					id="show"
+					class="mini_button"
+					@click="open()"
+					:class="{ 'disabled': isOpen }"
+					:title="isOpen ? 'Już jest widoczny!' : 'Pokaż pasek'">
+					<img src="img/play.png" alt="plus" />
 					<span>Pokaż</span>
 				</button>
-				<button id="hide" class="mini_button" @click="close()">
-					<img src="img/square.png" alt="plus" />
+				<button
+					id="hide"
+					class="mini_button"
+					@click="close()"
+					:class="{ 'disabled': !isOpen }"
+					:title="!isOpen ? 'Już jest ukryty!' : 'Ukryj pasek'">
+					<img src="img/stop.png" alt="plus" />
 					<span>Ukryj</span>
 				</button>
 			</div>

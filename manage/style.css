@@ -6,6 +6,15 @@
 	margin: 0;
 	overflow-x: hidden;
 }
+.disabled {
+	cursor: not-allowed !important;
+}
+.disabled:hover {
+	background-color: #444 !important;
+}
+.disabled img {
+	filter: grayscale(0.5) !important;
+}
 .dnone {
 	display: none !important;
 }
@@ -151,8 +160,16 @@ body {
 	cursor: pointer;
 }
 .mini_button img {
-	width: 20px;
-	padding: 5px;
+	width: 25px;
+	padding: 9px;
+	margin: 5px;
+	border-radius: 3px;
+}
+#show img {
+	background-color: rgb(16, 197, 37);
+}
+#hide img {
+	background-color: rgb(207, 0, 0);
 }
 .text-buttons {
 	display: flex;

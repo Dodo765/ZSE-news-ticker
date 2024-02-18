@@ -4,6 +4,7 @@ const app = Vue.createApp({
 			socket: null,
 			animationDelay: 100,
 			text: [""],
+			isOpen: false,
 		};
 	},
 	mounted() {
@@ -48,9 +49,10 @@ const app = Vue.createApp({
 			this.socket.on("server-failed-message", (message) => {
 				this.statusPopup(message, false);
 			});
-			this.socket.on("update-data", (text, delay) => {
+			this.socket.on("update-data", (text, delay, isOpen) => {
 				this.text = text;
 				this.animationDelay = delay;
+				this.isOpen = isOpen;
 				setTimeout(() => {
 					this.textareaHeight();
 				}, 1);
