@@ -38,7 +38,7 @@ const app = Vue.createApp({
 
 		this.socket.on("connect", () => {
 			//console.log("Socket ID:" + this.socket.id);
-			console.log("Wersja: 1.0");
+			console.log("Wersja: 1.1");
 
 			this.socket.emit("req-data");
 			this.socket.on("update-data", (text, delay, isOpen) => {
