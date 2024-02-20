@@ -68,6 +68,9 @@ async function main() {
 			socket.emit("server-successfull-message", "Zamknięto napisy");
 			updateClients();
 		});
+		socket.on("req-state", () => {
+			socket.emit("res-state", data.isOpen);
+		});
 	});
 }
 main();
@@ -79,3 +82,13 @@ app.use(`${URLpath}/manage`, express.static(path.join(__dirname, "manage")));
 app.use(`${URLpath}`, express.static(path.join(__dirname, "menu")));
 
 app.use(`${URLpath}/sources`, express.static(path.join(__dirname, "sources")));
+
+//API
+app.use(`${URLpath}/API/show`, (req, res) => {
+	data.isOpen = true;
+	res.status(200).json({ operation: "show", state: "success" });
+});
+app.use(`${URLpath}/API/hide`, (req, res) => {
+	data.isOpen = false;
+	res.status(200).json({ operation: "hide", state: "success" });
+});

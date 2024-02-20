@@ -44,6 +44,9 @@ const app = Vue.createApp({
 			setTimeout(() => {
 				this.socket.emit("req-data");
 			}, 1);
+			setInterval(() => {
+				this.socket.emit("req-state");
+			}, 1000);
 			this.socket.on("server-successfull-message", (message) => {
 				this.statusPopup(message, true);
 			});
@@ -57,6 +60,9 @@ const app = Vue.createApp({
 				setTimeout(() => {
 					this.textareaHeight();
 				}, 1);
+			});
+			this.socket.on("res-state", (state) => {
+				this.isOpen = state;
 			});
 		});
 
