@@ -21,6 +21,7 @@ const io = new Server(server, {
 	path: `${URLpath}/socket.io`, //url
 });
 
+
 //first data
 let data = {
 	speed: 75,
