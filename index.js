@@ -21,16 +21,21 @@ const io = new Server(server, {
 	path: `${URLpath}/socket.io`, //url
 });
 
-
 //first data
 let data = {
-	speed: 75,
+	speed: 750,
 	text: [
-		"Paski informacyjne Szkolnego Studia Telewizyjnego w Zespole Szkół Elektronicznych",
-		"Paski informacyjne Szkolnego Studia Telewizyjnego w Zespole Szkół Elektronicznych",
+		"Jako szkoła posiadamy własne Studio TV. Najlepsze technikum w Rzeszowie. Ponad 98% zdawalność matur i egzaminów zawodowych w 2022 r. Hala sportowa do dyspozycji naszych uczniów. Pobliski internat dla uczniów z dalszych okolic. Nowoczesny sprzęt do dyspozycji. Nowe sale lekcyjne sponsorowane przez firmy: Tech-Met oraz BorgWarner",
+		"Absolwent szkoły kształcącej w zawodzie technik automatyk powinien być przygotowany do wykonywania następujących zadań zawodowych: montażu urządzeń i instalacji automatyki, uruchamiania urządzeń i instalacji automatyki, obsługi urządzeń i instalacji automatyki, przeglądów technicznych i konserwacji urządzeń i instalacji automatyki, diagnostyki i remontu urządzeń i instalacji automatyki, wizualizacji procesów produkcyjnych i sterowania procesami produkcyjnymi w zautomatyzowanych liniach produkcyjnych, uzyskania dodatkowych certyfikatów i uprawnień.",
+		"Absolwent szkoły kształcącej w zawodzie technik elektronik powinien być przygotowany do wykonywania następujących zadań zawodowych: montowania i uruchamiania elementów, układów i urządzeń elektronicznych, wykonywania instalacji i instalowania urządzeń elektronicznych, użytkowania instalacji elektronicznych i urządzeń elektronicznych, konserwowania i naprawy instalacji elektronicznych i urządzeń elektronicznych, uzyskania dodatkowych uprawnień, tj.: uprawnień SEP do 1 kV (w zakresie eksploatacji i dozoru urządzeń, instalacji i sieci elektroenergetycznych do 1 kV - wydawane uprawnienia elektryczne w formie świadectwa kwalifikacji są ważne przez okres 5 lat).",
+		"Absolwent szkoły kształcącej w zawodzie technik informatyk powinien być przygotowany do wykonywania następujących zadań zawodowych: montażu oraz eksploatacji komputera i urządzeń peryferyjnych, naprawy i diagnostyki usterek sprzętu komputerowego, projektowania i wykonywania lokalnej sieci komputerowej, administrowania sieciowymi systemami operacyjnymi, projektowania baz danych i administrowania bazami, konfigurowania urządzeń sieciowych, serwerów, routerów, tworzenia i administrowania stronami WWW, tworzenia desktopowych, webowych oraz mobilnych aplikacji internetowych, administrowania stronami i aplikacjami internetowymi, cyfrowego przetwarzania obrazu i dźwięku, projektowania grafiki komputerowej.",
 	],
 	isOpen: false,
 };
+
+if (data.text.length > 0) {
+	data.speed = Math.round(data.text.join("").length / 4 / 10) * 10;
+}
 
 console.log(
 	`Serwer Express działa na http://localhost:${servicePort}${URLpath}/manage i http://localhost:${servicePort}${URLpath}/display 
