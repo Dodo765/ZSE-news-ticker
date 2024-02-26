@@ -13,25 +13,30 @@ body {
 	border: 10px solid rgba(0, 0, 0, 0.2);
 }
 .container {
-	width: 2000px;
-	height: 1000px;
+	width: 2200px;
+	height: 800px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
 .left-panel {
 	z-index: 5;
-	width: 200px;
+	width: 300px;
+	height: 100px;
 	position: relative;
+	background-image: url("img/paski1.png");
+	background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
 }
 .text-area {
 	width: 1600px;
 	height: 50px;
 }
 .text {
-	width: calc(100% + 100px);
+	width: calc(100% + 200px);
 	position: relative;
-	left: -50px;
+	left: -100px;
 	height: 100%;
 	background-color: rgba(255, 255, 255, 0.5);
 	display: flex;
@@ -82,8 +87,13 @@ body {
 
 .right-panel {
 	z-index: 5;
-	width: 200px;
+	width: 300px;
+	height: 100px;
 	position: relative;
+	background-image: url("img/paski2.png");
+	background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
 }
 .container {
 	transform: scale(0);
