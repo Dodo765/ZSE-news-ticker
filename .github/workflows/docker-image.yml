@@ -15,4 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker run -d -p 443:8080 ${{ secrets.DOCKER_REGISTRY }}/dkawalec76/zse-news-tickers:kezit
+      run: docker run -d -p 443:8080 dkawalec76/zse-news-tickers:kezit
