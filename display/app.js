@@ -1,6 +1,8 @@
+/* Inicjalizacja frameworka VueJS */
 const app = Vue.createApp({
 	data() {
 		return {
+			/* Ustawienie domyślnych wartości */
 			socket: null,
 			animationDelay: 100,
 			text: [""],
@@ -8,12 +10,18 @@ const app = Vue.createApp({
 		};
 	},
 	mounted() {
+		/* Kod wykonuje się jeden raz po załadowaniu strony */
+
+		/* Inicjalizacja połączenia z serwerem Socket.IO */
 		const URL = window.location.origin;
 		let fullpath = window.location.pathname;
 		let loc = fullpath.indexOf("/display/");
 		const PATH = fullpath.slice(0, loc);
+		this.socket = io(URL, {
+			path: `${PATH}/socket.io`,
+		});
 
-		//logo
+		/* Wyświetlenie małej reklamy :) */
 		console.log(`		 _____                  _       _ _
 		|  __ \\                (_)     (_) |
 		| |  | | ___  _ __ ___  _ _ __  _| | __
@@ -32,27 +40,34 @@ const app = Vue.createApp({
 		|_____/ \\___/ \\__,_|\\___/_/  \\___/____/ 
 		`);
 
-		this.socket = io(URL, {
-			path: `${PATH}/socket.io`,
-		});
-
+		/* Funkcje uruchamiane, gdy połączenie się uruchomi pomyślnie */
 		this.socket.on("connect", () => {
-			//console.log("Socket ID:" + this.socket.id);
 			console.log("Wersja: 1.1");
 
-			this.socket.emit("req-data");
-			this.socket.on("update-data", (text, delay, isOpen) => {
-				if (this.text != text) this.text = text;
-				if (this.animationDelay != delay) this.animationDelay = delay;
-				if (this.isOpen != isOpen) this.isOpen = isOpen;
-			});
+			/* Wysłanie zapytania do serwera z poleceniem wysłania wszystkich danych
+			   (opóźnienie wynika z przyczyn technicznych) */
+			setTimeout(() => {
+				this.socket.emit("req-data");
+			}, 1);
 
+			/* Cykliczne wysyłanie zapytań o wysłanie aktualnego stanu widoczności strony */
 			setInterval(() => {
 				this.socket.emit("req-data");
-			}, 1000);
+			}, 500);
+
+			/* Odbieranie wszystkich danych nadanych od strony serwera */
+			this.socket.on("update-data", (data) => {
+				if (data) {
+					if (this.text != data.text) this.text = data.text;
+					if (this.animationDelay != data.speed) this.animationDelay = data.speed;
+					if (this.isOpen != data.isOpen) this.isOpen = data.isOpen;
+				}
+			});
 		});
 	},
 	watch: {
+		/* Ta funkcja będzie się wykonywać zawsze, gdy zmienna isOpen
+		   zmieni swoją wartość - odpowiednio zmienianiąc stan widoczności pasków */
 		isOpen(newVal) {
 			if (newVal) {
 				this.open();
@@ -62,11 +77,17 @@ const app = Vue.createApp({
 		},
 	},
 	methods: {
+		/* Miejsce, w którym Vue przechowuje wszystkie funkcje dostępne
+		   do wywołania z poziomu całej strony */
+
+		/* Funkcja, która obsługuje ukrycie pasków */
 		close() {
 			const con = document.querySelector(".container");
 			if (con.classList.contains("open")) con.classList.remove("open");
 			if (!con.classList.contains("closed")) con.classList.add("closed");
 		},
+
+		/* Funkcja, która obsługuje pokazanie pasków */
 		open() {
 			const con = document.querySelector(".container");
 			if (con.classList.contains("closed")) con.classList.remove("closed");

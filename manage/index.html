@@ -60,9 +60,9 @@
 			</div>
 			<div class="bg speed">
 				<div class="speed-title">Prędkość przesuwania</div>
-				<div class="speed-wraper" title="Najlepsze rezultaty, gdy wartość to ilość liter / 4">
+				<div class="speed-wraper">
 					<div class="speed-text">Wpisz wartość odstępu czasowego między przesunięciami:</div>
-					<input type="number" v-model="animationDelay" class="speed-value" @keyup.enter="setSpeed()" />
+					<input type="number" v-model="animationDelay" class="speed-value" @keyup.enter="setSpeed()" min="1" max="2500" />
 				</div>
 				<button id="setSpeed" class="mini_button" @click="setSpeed()">
 					<img src="img/square.png" alt="plus" />

@@ -1,6 +1,8 @@
+/* Inicjalizacja frameworka VueJS */
 const app = Vue.createApp({
 	data() {
 		return {
+			/* Ustawienie domyślnych wartości */
 			socket: null,
 			animationDelay: 100,
 			text: [""],
@@ -8,12 +10,18 @@ const app = Vue.createApp({
 		};
 	},
 	mounted() {
+		/* Kod wykonuje się jeden raz po załadowaniu strony */
+
+		/* Inicjalizacja połączenia z serwerem Socket.IO */
 		const URL = window.location.origin;
 		let fullpath = window.location.pathname;
 		let loc = fullpath.indexOf("/manage/");
 		const PATH = fullpath.slice(0, loc);
+		this.socket = io(URL, {
+			path: `${PATH}/socket.io`,
+		});
 
-		//logo
+		/* Wyświetlenie małej reklamy :) */
 		console.log(`		 _____                  _       _ _
 		|  __ \\                (_)     (_) |
 		| |  | | ___  _ __ ___  _ _ __  _| | __
@@ -32,40 +40,56 @@ const app = Vue.createApp({
 		|_____/ \\___/ \\__,_|\\___/_/  \\___/____/ 
 		`);
 
-		this.socket = io(URL, {
-			path: `${PATH}/socket.io`,
-		});
-
+		/* Funkcje uruchamiane, gdy połączenie się uruchomi pomyślnie */
 		this.socket.on("connect", () => {
-			//console.log("Socket ID:" + this.socket.id);
 			console.log("Wersja: 1.1");
+
+			/* Wyświetlenie powiadomienia o pomyślny połączeniu z serwerem Socket.IO */
 			this.statusPopup("Połączono", true, 1000);
 
+			/* Wysłanie zapytania do serwera z poleceniem wysłania wszystkich danych
+			   (opóźnienie wynika z przyczyn technicznych) */
 			setTimeout(() => {
 				this.socket.emit("req-data");
 			}, 1);
+
+			/* Cykliczne wysyłanie zapytań o wysłanie aktualnego stanu widoczności strony */
 			setInterval(() => {
 				this.socket.emit("req-state");
-			}, 1000);
+			}, 500);
+
+			/* Obsługa wyświetlania powiadomień nadanych od strony serwera (zakończonych sukcesem) */
 			this.socket.on("server-successfull-message", (message) => {
 				this.statusPopup(message, true);
 			});
+
+			/* Obsługa wyświetlania powiadomień nadanych od strony serwera (zakończonych niepowodzeniem) */
 			this.socket.on("server-failed-message", (message) => {
 				this.statusPopup(message, false);
 			});
-			this.socket.on("update-data", (text, delay, isOpen) => {
-				this.text = text;
-				this.animationDelay = delay;
-				this.isOpen = isOpen;
-				setTimeout(() => {
-					this.textareaHeight();
-				}, 1);
+
+			/* Odbieranie wszystkich danych nadanych od strony serwera */
+			this.socket.on("update-data", (data) => {
+				if (data) {
+					this.text = data.text;
+					this.animationDelay = data.speed;
+					this.isOpen = data.isOpen;
+					/* Przy odebraniu nowych danych, funkcja automatycznie próbuje dostosować 
+					   wysokość textarea do ilości tekstu (funkcja eksperymentalna) */
+					setTimeout(() => {
+						this.textareaHeight();
+					}, 1);
+				}
 			});
+
+			/* Obsługa odbierania aktualnego stanu widoczności strony */
 			this.socket.on("res-state", (state) => {
 				this.isOpen = state;
 			});
 		});
 
+		/* Funkcja automatycznie próbuje dostosować wysokość textarea
+		   do ilości tekstu (funkcja eksperymentalna) */
 		document.addEventListener("DOMContentLoaded", () => {
 			const textareaEle = document.querySelectorAll(".textarea");
 			textareaEle.forEach((textarea) => {
@@ -79,6 +103,11 @@ const app = Vue.createApp({
 		});
 	},
 	methods: {
+		/* Miejsce, w którym Vue przechowuje wszystkie funkcje dostępne
+		   do wywołania z poziomu całej strony */
+
+		/* Funkcja automatycznie próbuje dostosować wysokość textarea
+		   do ilości tekstu (funkcja eksperymentalna */
 		textareaHeight() {
 			const textareaEle = document.querySelectorAll(".textarea");
 			textareaEle.forEach((textarea) => {
@@ -86,6 +115,8 @@ const app = Vue.createApp({
 				textarea.style.height = `${textarea.scrollHeight}px`;
 			});
 		},
+
+		/* Wyświetlenie powiadomienia udanej i nieudanej akcji, za co odpowiana parametr isOk */
 		async statusPopup(message, isOk, time) {
 			if (time == undefined) time = 2500;
 			let pop = document.querySelector("#popup");
@@ -110,32 +141,39 @@ const app = Vue.createApp({
 				}
 			}
 		},
+
+		/* Funkcja, która obsługuje ukrycie pasków */
 		close() {
 			this.socket.emit("close");
 		},
+
+		/* Funkcja, która obsługuje pokazanie pasków */
 		open() {
 			this.socket.emit("open");
 		},
+
+		/* Funkcja sprawdzająca poprawność tekstu i wysyłająca go do serwera */
 		setText() {
-			if (this.text.length > 0 && this.text != undefined && this.text != null) {
+			if (this.text) {
 				console.log("text-send");
 				this.socket.emit("send-text", this.text);
 			}
 		},
+
+		/* Obsługa wysłania prędkości do serwera */
 		setSpeed() {
-			if (
-				this.animationDelay > 0 &&
-				this.animationDelay < 1000 &&
-				this.animationDelay != undefined &&
-				this.animationDelay != null
-			) {
+			if (this.animationDelay && this.animationDelay > 0 && this.animationDelay < 1000) {
 				document.querySelector("input").blur();
 				this.socket.emit("send-speed", this.animationDelay);
 			}
 		},
+
+		/* Stworzenie nowego wiersza tekstu (nowego akapitu) */
 		addText() {
 			this.text.push("");
 		},
+
+		/* Usunięcie wiersza z tekstu o podanym indexie */
 		delText(index) {
 			this.text.splice(index, 1);
 		},
