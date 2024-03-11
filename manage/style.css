@@ -210,3 +210,65 @@ body {
 	justify-content: center;
 	gap: 20px;
 }
+
+.img {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+.img-title {
+	font-size: 1.8em;
+	text-align: center;
+	margin: 15px 0;
+}
+.img-place {
+	margin: 15px;
+}
+.img-place img {
+	margin: 10px;
+	height: 40px;
+}
+.img-subtitle {
+	margin: 15px;
+}
+input[type="file"] {
+	width: 300px;
+	max-width: 100%;
+	color: #444;
+	padding: 5px;
+	background: #fff;
+	border-radius: 10px;
+	border: 1px solid #555;
+}
+
+input[type="file"]::file-selector-button {
+	margin-right: 20px;
+	border: none;
+	background: #40c258ff;
+	padding: 10px 20px;
+	border-radius: 10px;
+	color: #fff;
+	cursor: pointer;
+	transition: background 0.2s ease-in-out;
+}
+
+input[type="file"]::file-selector-button:hover {
+	background: rgb(52, 158, 71);
+}
+#formIMG {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+#formIMG .wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+#formIMG input {
+	margin: 10px;
+}
+.wrp {
+	display: flex;
+}

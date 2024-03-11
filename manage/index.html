@@ -69,6 +69,38 @@
 					<span>Aktualizuj prędkość</span>
 				</button>
 			</div>
+			<div class="bg img">
+				<div class="img-title">Grafiki</div>
+				<div class="img-sub">Aktualny wygląd paska:</div>
+				<div class="img-place">
+					<img :src="'../display/img/'+img[0]" alt="pasek lewy" />
+					<img :src="'../display/img/'+img[1]" alt="pasek prawy" />
+				</div>
+				<div class="img-subtitle">Podaj pliki z grafiką (odpowiedniu lewy i prawy)</div>
+				<iframe name="dummyframe" id="dummyframe" style="display: none"></iframe>
+				<form
+					action="upload-photo"
+					method="POST"
+					target="dummyframe"
+					enctype="multipart/form-data"
+					v-on:submit="sendImg()"
+					id="formIMG">
+					<div class="wrapper">
+						<input type="file" name="left" id="left-wing" class="inputfile" accept=".png" required />
+						<input type="file" name="right" id="right-wing" accept=".png" required />
+					</div>
+					<div class="wrp">
+						<button id="setImg" class="mini_button" @click="sendImg()">
+							<img src="img/square.png" alt="plus" />
+							<span>Aktualizuj Grafiki</span>
+						</button>
+						<button id="setImgDefault" class="mini_button" @click.prevent="sendDefaultImg()">
+							<img src="img/square.png" alt="plus" />
+							<span>Ustaw domyślne</span>
+						</button>
+					</div>
+				</form>
+			</div>
 		</div>
 
 		<div id="popup" class="hidden">

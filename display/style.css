@@ -24,10 +24,9 @@ body {
 	width: 300px;
 	height: 100px;
 	position: relative;
-	background-image: url("img/paski1.png");
 	background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
+	background-size: contain;
+	background-position: center;
 }
 .text-area {
 	width: 1600px;
@@ -90,10 +89,9 @@ body {
 	width: 300px;
 	height: 100px;
 	position: relative;
-	background-image: url("img/paski2.png");
 	background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
+	background-size: contain;
+	background-position: center;
 }
 .container {
 	transform: scale(0);

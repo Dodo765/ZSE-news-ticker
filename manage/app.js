@@ -7,6 +7,7 @@ const app = Vue.createApp({
 			animationDelay: 100,
 			text: [""],
 			isOpen: false,
+			img: ["left-wing.png", "right-wing.png"],
 		};
 	},
 	mounted() {
@@ -39,12 +40,13 @@ const app = Vue.createApp({
 		| |__| | (_) | (_| | (_) / /| (_) |__) |
 		|_____/ \\___/ \\__,_|\\___/_/  \\___/____/ 
 		`);
+		/* Wyślij informacje o nowym połączeniu */
+		this.socket.emit("c-log", "Połączono ze stroną Manage");
 
 		/* Funkcje uruchamiane, gdy połączenie się uruchomi pomyślnie */
 		this.socket.on("connect", () => {
-			this.socket.emit("log", "Połączono ze stroną Manage");
 			this.log(`Podłączono z serwerem Socket.IO`);
-			console.log("Wersja: 1.2");
+			this.log("Wersja: 1.2");
 
 			/* Wyświetlenie powiadomienia o pomyślny połączeniu z serwerem Socket.IO */
 			this.statusPopup("Połączono", true, 1000);
@@ -58,6 +60,7 @@ const app = Vue.createApp({
 			/* Cykliczne wysyłanie zapytań o wysłanie aktualnego stanu widoczności strony */
 			setInterval(() => {
 				this.socket.emit("req-state");
+				this.socket.emit("req-img");
 			}, 500);
 
 			/* Obsługa wyświetlania powiadomień nadanych od strony serwera (zakończonych sukcesem) */
@@ -76,6 +79,7 @@ const app = Vue.createApp({
 					this.text = data.text;
 					this.animationDelay = data.speed;
 					this.isOpen = data.isOpen;
+					this.img = data.img;
 					/* Przy odebraniu nowych danych, funkcja automatycznie próbuje dostosować 
 					   wysokość textarea do ilości tekstu (funkcja eksperymentalna) */
 					setTimeout(() => {
@@ -87,6 +91,10 @@ const app = Vue.createApp({
 			/* Obsługa odbierania aktualnego stanu widoczności strony */
 			this.socket.on("res-state", (state) => {
 				this.isOpen = state;
+			});
+
+			this.socket.on("res-img", (img) => {
+				this.img = img;
 			});
 		});
 
@@ -165,7 +173,6 @@ const app = Vue.createApp({
 		/* Funkcja sprawdzająca poprawność tekstu i wysyłająca go do serwera */
 		setText() {
 			if (this.text) {
-				console.log("text-send");
 				this.socket.emit("send-text", this.text);
 				this.log(`Wysłano tekst: ${this.text}`);
 			} else {
@@ -180,7 +187,6 @@ const app = Vue.createApp({
 				this.socket.emit("send-speed", this.animationDelay);
 				this.log(`Wysłano prędkość: ${this.animationDelay}`);
 			}
-			this.log(`Wysłano prędkość: ${this.animationDelay} - BŁĄD!`);
 		},
 
 		/* Stworzenie nowego wiersza tekstu (nowego akapitu) */
@@ -193,6 +199,19 @@ const app = Vue.createApp({
 		delText(index) {
 			this.text.splice(index, 1);
 			this.log(`Usunięto wiersz z tekstu o podanym indexie: ${index}`);
+		},
+
+		/* Wysłanie formularza z nowymi zdjęciami */
+		sendImg() {
+			this.log("Próba wysłania formularza");
+			const form = document.querySelector("#formIMG");
+			form.requestSubmit();
+		},
+
+		/* Wysłanie polecenia zmiany grafik na domyślne */
+		sendDefaultImg() {
+			this.socket.emit("defaultImg");
+			this.log("Wysłanie polecenia zmiany grafik na domyślne");
 		},
 	},
 }).mount(".container");

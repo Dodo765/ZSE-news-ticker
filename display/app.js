@@ -7,6 +7,7 @@ const app = Vue.createApp({
 			animationDelay: 100,
 			text: [""],
 			isOpen: false,
+			img: ["left-wing.png", "right-wing.png"],
 		};
 	},
 	mounted() {
@@ -40,11 +41,13 @@ const app = Vue.createApp({
 		|_____/ \\___/ \\__,_|\\___/_/  \\___/____/ 
 		`);
 
+		/* Wyślij informacje o nowym połączeniu */
+		this.socket.emit("c-log", "Połączono ze stroną Display");
+
 		/* Funkcje uruchamiane, gdy połączenie się uruchomi pomyślnie */
 		this.socket.on("connect", () => {
-			this.socket.emit("log", "Połączono ze stroną Display");
 			this.log(`Podłączono z serwerem Socket.IO`);
-			console.log("Wersja: 1.2");
+			this.log("Wersja: 1.2");
 
 			/* Wysłanie zapytania do serwera z poleceniem wysłania wszystkich danych
 			   (opóźnienie wynika z przyczyn technicznych) */
@@ -63,7 +66,7 @@ const app = Vue.createApp({
 					if (this.text != data.text) this.text = data.text;
 					if (this.animationDelay != data.speed) this.animationDelay = data.speed;
 					if (this.isOpen != data.isOpen) this.isOpen = data.isOpen;
-					this.log(`Odebrano dane: ${data}`);
+					if (this.img != data.img) this.img = data.img;
 				}
 			});
 		});
@@ -88,6 +91,7 @@ const app = Vue.createApp({
 			let time = new Date().toLocaleTimeString("pl");
 			console.log(`[${time}] ${message}`);
 		},
+
 		/* Funkcja, która obsługuje ukrycie pasków */
 		close() {
 			const con = document.querySelector(".container");
