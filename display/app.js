@@ -42,7 +42,9 @@ const app = Vue.createApp({
 
 		/* Funkcje uruchamiane, gdy połączenie się uruchomi pomyślnie */
 		this.socket.on("connect", () => {
-			console.log("Wersja: 1.1");
+			this.socket.emit("log", "Połączono ze stroną Display");
+			this.log(`Podłączono z serwerem Socket.IO`);
+			console.log("Wersja: 1.2");
 
 			/* Wysłanie zapytania do serwera z poleceniem wysłania wszystkich danych
 			   (opóźnienie wynika z przyczyn technicznych) */
@@ -61,6 +63,7 @@ const app = Vue.createApp({
 					if (this.text != data.text) this.text = data.text;
 					if (this.animationDelay != data.speed) this.animationDelay = data.speed;
 					if (this.isOpen != data.isOpen) this.isOpen = data.isOpen;
+					this.log(`Odebrano dane: ${data}`);
 				}
 			});
 		});
@@ -80,11 +83,17 @@ const app = Vue.createApp({
 		/* Miejsce, w którym Vue przechowuje wszystkie funkcje dostępne
 		   do wywołania z poziomu całej strony */
 
+		/* Obsługa logów */
+		log(message) {
+			let time = new Date().toLocaleTimeString("pl");
+			console.log(`[${time}] ${message}`);
+		},
 		/* Funkcja, która obsługuje ukrycie pasków */
 		close() {
 			const con = document.querySelector(".container");
 			if (con.classList.contains("open")) con.classList.remove("open");
 			if (!con.classList.contains("closed")) con.classList.add("closed");
+			this.log("Ukryto paski");
 		},
 
 		/* Funkcja, która obsługuje pokazanie pasków */
@@ -92,6 +101,7 @@ const app = Vue.createApp({
 			const con = document.querySelector(".container");
 			if (con.classList.contains("closed")) con.classList.remove("closed");
 			if (!con.classList.contains("open")) con.classList.add("open");
+			this.log("Pokazano paski");
 		},
 	},
 }).mount(".container");

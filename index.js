@@ -11,6 +11,7 @@ require("dotenv").config();
 const URLpath = process.env.URLpath; //zmienić
 const cors = process.env.cors;
 const servicePort = process.env.servicePort;
+log(`Wczytane zmienne: URLpath: ${URLpath}, servicePort: ${servicePort}, cors: ${cors}`);
 
 /* Ustawnienie serwera do obsługi WWW i Socket.IO na podanym porcie */
 const app = express();
@@ -36,12 +37,19 @@ if (data.text.length > 0) {
 	data.speed = Math.round(data.text.join("").length / 4 / 10) * 10;
 }
 
+/* Funkcja wysyłająca logi */
+function log(message) {
+	let time = new Date().toLocaleTimeString("pl");
+	console.log(`[${time}] ${message}`);
+}
+
 /* Ustawnienia połączeń Socket.IO */
 io.on("connect", (socket) => {
-	/* Wyświetlenie ID klienta, który podłączył się do serwera */
-	console.log("\nNowy klient: ");
-	console.log(socket.id);
-
+	/* Odpowiednie wyświetlenie komunikatu otrzymanego od klienta */
+	socket.on("log", (message) => {
+		log(message);
+	});
+	
 	/* Odpowiedź serwera na zapytanie klienta - prośba o wysłanie wszystkich danych */
 	socket.on("req-data", () => {
 		socket.emit("update-data", data);
@@ -53,8 +61,9 @@ io.on("connect", (socket) => {
 		if (speed && speed > 0 && speed <= 2500) {
 			data.speed = speed;
 			socket.emit("server-successfull-message", "Poprawnie zmieniono prędkość");
+			log(`Poprawnie zmieniono prędkość: ${data.speed}`);
 		} else {
-			console.error(`Błąd przy ustawianiu prędkości: ${speed}`);
+			log(`Błąd przy ustawianiu prędkości: ${speed}`);
 		}
 	});
 
@@ -66,8 +75,9 @@ io.on("connect", (socket) => {
 			data.speed = Math.round(data.text.join("").length / 4 / 10) * 10;
 			socket.emit("update-data", data);
 			socket.emit("server-successfull-message", "Poprawnie zmieniono tekst");
+			log(`Poprawnie zmieniono tekst: ${data.text} oraz zmieniono prędkość: ${data.speed}`);
 		} else {
-			console.error(`Błąd w otrzymywaniu tekstu: ${text}`);
+			log(`Błąd w otrzymywaniu tekstu: ${text}`);
 		}
 	});
 
@@ -77,6 +87,7 @@ io.on("connect", (socket) => {
 		data.isOpen = true;
 		socket.emit("server-successfull-message", "Uruchomiono napisy");
 		socket.emit("update-data", data);
+		log("Uruchomiono napisy");
 	});
 
 	/* Otrzymanie polecenia zmiany stanu wyświetlania pasków na ukryte 
@@ -85,6 +96,7 @@ io.on("connect", (socket) => {
 		data.isOpen = false;
 		socket.emit("server-successfull-message", "Zamknięto napisy");
 		socket.emit("update-data", data);
+		log("Zamknięto napisy");
 	});
 
 	/* Obsługa zapytania o stan widoczności pasków - zwraca true/false */
@@ -105,20 +117,18 @@ app.use(`${URLpath}/sources`, express.static(path.join(__dirname, "sources")));
 app.use(`${URLpath}/API/show`, (req, res) => {
 	data.isOpen = true;
 	res.status(200).json({ operation: "show", state: "success" });
+	log(`Request API ustawienie pasków na widoczne`);
 });
 
 /* Zapytanie, które umożliwia zmianę stanu pasków na ukryte */
 app.use(`${URLpath}/API/hide`, (req, res) => {
 	data.isOpen = false;
 	res.status(200).json({ operation: "hide", state: "success" });
+	log(`Request API ustawienie pasków na ukryte`);
 });
 
 /* Uruchomienie serwera na podanym porcie */
-server.listen(servicePort, () => {
-	console.log("");
-});
-console.log(
-	`Serwer Express działa na http://localhost:${servicePort}${URLpath}/manage i 
-	http://localhost:${servicePort}${URLpath}/display 
-	natomiast socket.io na http://localhost:${servicePort}${URLpath}/socket.io`
-);
+server.listen(servicePort, () => {});
+log(`Serwer Express działa na http://localhost:${servicePort}${URLpath}/manage i 
+http://localhost:${servicePort}${URLpath}/display 
+natomiast socket.io na http://localhost:${servicePort}${URLpath}/socket.io`);

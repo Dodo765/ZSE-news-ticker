@@ -42,7 +42,9 @@ const app = Vue.createApp({
 
 		/* Funkcje uruchamiane, gdy połączenie się uruchomi pomyślnie */
 		this.socket.on("connect", () => {
-			console.log("Wersja: 1.1");
+			this.socket.emit("log", "Połączono ze stroną Manage");
+			this.log(`Podłączono z serwerem Socket.IO`);
+			console.log("Wersja: 1.2");
 
 			/* Wyświetlenie powiadomienia o pomyślny połączeniu z serwerem Socket.IO */
 			this.statusPopup("Połączono", true, 1000);
@@ -106,6 +108,12 @@ const app = Vue.createApp({
 		/* Miejsce, w którym Vue przechowuje wszystkie funkcje dostępne
 		   do wywołania z poziomu całej strony */
 
+		/* Obsługa logów */
+		log(message) {
+			let time = new Date().toLocaleTimeString("pl");
+			console.log(`[${time}] ${message}`);
+		},
+
 		/* Funkcja automatycznie próbuje dostosować wysokość textarea
 		   do ilości tekstu (funkcja eksperymentalna */
 		textareaHeight() {
@@ -145,11 +153,13 @@ const app = Vue.createApp({
 		/* Funkcja, która obsługuje ukrycie pasków */
 		close() {
 			this.socket.emit("close");
+			this.log("Ukryto paski");
 		},
 
 		/* Funkcja, która obsługuje pokazanie pasków */
 		open() {
 			this.socket.emit("open");
+			this.log("Otworzono paski");
 		},
 
 		/* Funkcja sprawdzająca poprawność tekstu i wysyłająca go do serwera */
@@ -157,6 +167,9 @@ const app = Vue.createApp({
 			if (this.text) {
 				console.log("text-send");
 				this.socket.emit("send-text", this.text);
+				this.log(`Wysłano tekst: ${this.text}`);
+			} else {
+				this.log(`Nie wysłano tekstu: ${this.text} - BŁĄD!`);
 			}
 		},
 
@@ -165,17 +178,21 @@ const app = Vue.createApp({
 			if (this.animationDelay && this.animationDelay > 0 && this.animationDelay < 1000) {
 				document.querySelector("input").blur();
 				this.socket.emit("send-speed", this.animationDelay);
+				this.log(`Wysłano prędkość: ${this.animationDelay}`);
 			}
+			this.log(`Wysłano prędkość: ${this.animationDelay} - BŁĄD!`);
 		},
 
 		/* Stworzenie nowego wiersza tekstu (nowego akapitu) */
 		addText() {
 			this.text.push("");
+			this.log("Dodano wiersz tekstu");
 		},
 
 		/* Usunięcie wiersza z tekstu o podanym indexie */
 		delText(index) {
 			this.text.splice(index, 1);
+			this.log(`Usunięto wiersz z tekstu o podanym indexie: ${index}`);
 		},
 	},
 }).mount(".container");
