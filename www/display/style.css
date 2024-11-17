@@ -1,21 +1,33 @@
-* {
-	margin: 0;
-	padding: 0;
-	font-family: "Poppins", sans-serif;
+*
+{
+    box-sizing: border-box;
 }
+html,
 body {
-	background-color: #333;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+    margin: 0;
+	padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+
+	font-family: "Poppins", sans-serif;
 }
 .border {
 	border: 10px solid rgba(0, 0, 0, 0.2);
 }
 .container {
-	width: 2200px;
-	height: 800px;
-	display: flex;
+	height: 100%;
+    width: 100%;
+    padding-bottom: 50px;
+    
+    display: flex;
+	justify-content: center;
+	align-items: flex-end;
+}
+
+.bar
+{
+    display: flex;
 	justify-content: center;
 	align-items: center;
 }
@@ -24,9 +36,10 @@ body {
 	width: 300px;
 	height: 100px;
 	position: relative;
+	background-image: url("img/paski1.png");
 	background-repeat: no-repeat;
-	background-size: contain;
-	background-position: center;
+    background-size: contain;
+    background-position: center;
 }
 .text-area {
 	width: 1600px;
@@ -57,7 +70,7 @@ body {
 }
 .item {
 	display: inline-block;
-	padding: 0 1rem;
+	padding: 0 0.5rem;
 	font-size: 2rem;
 	color: black;
 	font-weight: 500;
@@ -89,38 +102,56 @@ body {
 	width: 300px;
 	height: 100px;
 	position: relative;
+	background-image: url("img/paski2.png");
 	background-repeat: no-repeat;
-	background-size: contain;
-	background-position: center;
+    background-size: contain;
+    background-position: center;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-.container {
+
+.right-panel img
+{
+    width: 60%;
+	height: 60%;
+}
+
+.bar {
 	transform: scale(0);
 }
-.container .text-area {
+.bar .text-area {
 	width: 0px;
 	opacity: 0;
 }
-.container.closed .text-area {
+.bar.hidden .text-area {
 	animation: close 1s ease-in-out;
 	width: 0px;
 	opacity: 0;
 }
-.container.open .text-area {
+.bar.shown .text-area {
 	animation: open 1s ease-in-out;
-	width: 1600px;
+	width: 1250px;
 	opacity: 1;
 }
-.container.closed {
+.bar.hidden {
 	animation: panel-not-visible 1s linear;
 	transform: scale(0);
 }
-.container.open {
+.bar.shown {
 	animation: panel-visible 1s linear;
 	transform: scale(1);
 }
+
+.disable
+{
+    display: none;
+}
+
 @keyframes close {
 	0% {
-		width: 1600px;
+		width: 1250px;
 		opacity: 1;
 	}
 	100% {
@@ -138,7 +169,7 @@ body {
 		opacity: 0;
 	}
 	100% {
-		width: 1600px;
+		width: 1250px;
 		opacity: 1;
 	}
 }

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pl-PL">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="theme-color" content="#ffffff" />
+		<script src="../sources/vue.global.prod.js"></script>
+        <script src="../sources/socket.io.min.js"></script>
+        <link rel="stylesheet" href="style.css" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" referrerpolicy="no-referrer" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+
+        <link rel="icon" type="image/png" href="img/logo-mini.png" />
+
+		<title>NT - Manage</title>
+	</head>
+	<body>
+		<div class="container">
+            <div id="header" class="menuElement">
+                <img src="img/logo-mini-title.png" alt="Logo">
+                <div class="text">
+                    <h2>News Ticker</h2>
+                    <i>by Dominik Kawalec</i>
+                </div>
+            </div>
+			<div id="controls" class="menuElement">
+				<button
+					id="show"
+					class="controls_button"
+					@click="show()"
+					:class="{ 'disabled': isVisible }"
+					:title="isVisible ? 'Już jest widoczny!' : 'Pokaż pasek'">
+					<i class="fas fa-eye"></i>
+					<span>Pokaż</span>
+				</button>
+				<button
+					id="hide"
+					class="controls_button"
+					@click="hide()"
+					:class="{ 'disabled': !isVisible }"
+					:title="!isVisible ? 'Już jest ukryty!' : 'Ukryj pasek'">
+					<i class="fas fa-eye-slash"></i>
+					<span>Ukryj</span>
+				</button>
+			</div>
+			<div class="menuElement options">
+                <label>
+                    <span>Zarządzanie napisami</span>
+                </label>
+                <label>
+                    <span>Prędkość przesuwania:</span>
+                    <input type="number" v-model="speed" @change="setSpeed()" min="1" max="2500" />
+                    <span>s</span>
+                </label>
+                <label>
+                    <span>Kropki między napisami:</span>
+                    <input type="checkbox" v-model="dots" @change="setDots()">
+                </label>
+				<div class="text-wrap">
+					<div class="text-item" v-for="(item, index) in text" :key="index">
+						<textarea type="text" cols="60" rows="5" class="text-content textarea" v-model="text[index]"></textarea>
+						<label alt="bin" @click="delText(index)">
+                            <i class="fas fa-trash b_controls b_controls_red" title="Usuń tekst"></i>
+                        </label>
+					</div>
+				</div>
+				<div class="row_arrange">
+                    <label alt="bin" @click="addText()">
+                        <i class="fas fa-plus b_controls" title="Dodaj tekst"></i>
+                    </label>
+                    <label alt="bin" @click="setText()">
+                        <i class="fas fa-upload b_controls" title="Zaktualizuj tekst"></i>
+                    </label>
+				</div>
+			</div>
+            <div class="menuElement options">
+                <label>
+                    <span>Wyświetl logotyp partnera:</span>
+                    <input type="checkbox" v-model="logo" @change="setLogo" id="logo">
+                </label>
+                <label>
+                    <span>Załaduj logotyp z pliku: <span id="filename"></span></span>
+                </label>
+                <label class="row_arrange">
+                    <label class="mini_button">
+                        <i class="fas fa-image"></i>
+                        <span>Wybierz</span>
+                        <input type="file" id="logofile" @change="setFileName()">
+                    </label>
+                    <button id="submitLogo" class="mini_button" @click="uploadLogo()">
+                        <i class="fas fa-upload"></i>
+                        <span>Zatwierdź</span>
+                    </button>
+                </label>
+			</div>
+		</div>
+        <!-- POPUP -->
+		<div id="popup">
+			<i class='icon fas'></i>
+			<div class="message">TEST</div>
+		</div>
+		<script src="app.js"></script>
+	</body>
+</html>
