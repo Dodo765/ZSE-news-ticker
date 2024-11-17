@@ -1,5 +1,6 @@
 //NEWS TICKERS
 const express = require("express")
+require("dotenv").config();
 const app = express()
 const PORT = process.env.PORT || 8080
 const server = require('http').createServer(app)
@@ -10,7 +11,6 @@ const fs = require('fs')
 const path = require('path')
 const swaggerJsdoc = require('swagger-jsdoc')
 const swaggerUi = require('swagger-ui-express')
-require("dotenv").config();
 
 /* Zaczytanie zmiennych ENV */
 const apiFullUrl = process.env.apiUrl
